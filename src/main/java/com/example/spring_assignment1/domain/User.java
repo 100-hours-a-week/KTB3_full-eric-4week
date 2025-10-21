@@ -15,6 +15,10 @@ public class User {
         this.profile_image = profile_image;
     }
 
+    public boolean validatePassword(String currentPassword) {
+        return password.equals(currentPassword);
+    }
+
     public Long getId() {return id;}
     public String getEmail() {return email;}
     public String getPassword() {return password;}

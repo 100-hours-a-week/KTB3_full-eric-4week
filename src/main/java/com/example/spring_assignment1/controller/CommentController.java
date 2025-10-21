@@ -1,7 +1,7 @@
 package com.example.spring_assignment1.controller;
 
 import com.example.spring_assignment1.constant.CustomResponseCode;
-import com.example.spring_assignment1.dto.ApiResponse;
+import com.example.spring_assignment1.dto.BaseResponse;
 import com.example.spring_assignment1.dto.comment.CommentRequest;
 import com.example.spring_assignment1.dto.comment.CommentResponse;
 import com.example.spring_assignment1.service.CommentService;
@@ -18,22 +18,22 @@ public class CommentController {
     public CommentController(CommentService commentService) { this.commentService = commentService; }
 
     @GetMapping("/post")
-    public ResponseEntity<ApiResponse<List<CommentResponse>>> getCommentsByPost(@RequestParam Long postId) {
+    public ResponseEntity<BaseResponse<List<CommentResponse>>> getCommentsByPost(@RequestParam Long postId) {
         return ResponseUtil.success(commentService.getComments(postId));
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<CommentResponse>> createComment(@RequestBody CommentRequest request) {
+    public ResponseEntity<BaseResponse<CommentResponse>> createComment(@RequestBody CommentRequest request) {
         return ResponseUtil.success(CustomResponseCode.CREATED, commentService.createComment(request));
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<ApiResponse<CommentResponse>> updateComment(@PathVariable Long id, @RequestBody CommentRequest request) {
+    public ResponseEntity<BaseResponse<CommentResponse>> updateComment(@PathVariable Long id, @RequestBody CommentRequest request) {
         return ResponseUtil.success(commentService.updateComment(id, request));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Void>> deleteComment(@PathVariable Long id) {
+    public ResponseEntity<BaseResponse<Void>> deleteComment(@PathVariable Long id) {
         commentService.deleteComment(id);
         return ResponseUtil.success(CustomResponseCode.NO_CONTENT, null);
     }

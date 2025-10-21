@@ -1,11 +1,12 @@
 package com.example.spring_assignment1.controller;
 
 import com.example.spring_assignment1.constant.CustomResponseCode;
-import com.example.spring_assignment1.dto.ApiResponse;
+import com.example.spring_assignment1.dto.BaseResponse;
 import com.example.spring_assignment1.dto.auth.UserLoginRequest;
+import com.example.spring_assignment1.dto.user.UserPasswordUpdateRequest;
 import com.example.spring_assignment1.dto.user.UserResponse;
 import com.example.spring_assignment1.dto.user.UserSignupRequest;
-import com.example.spring_assignment1.dto.user.UserUpdateRequest;
+import com.example.spring_assignment1.dto.user.UserNicknameUpdateRequest;
 import com.example.spring_assignment1.service.UserService;
 import com.example.spring_assignment1.util.ResponseUtil;
 import jakarta.validation.Valid;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/users")
-public class UserController {
+public class UserController implements UserApi {
     private UserService userService;
     //생성자가 하나라서 Autowired 자동 적용
     public UserController(UserService userService) {
@@ -22,45 +23,37 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<UserResponse>> signup(@Valid @RequestBody UserSignupRequest request) {
+    public ResponseEntity<BaseResponse<UserResponse>> signup(@Valid @RequestBody UserSignupRequest request) {
         return ResponseUtil.success(CustomResponseCode.CREATED, userService.signup(request));
     }
 
     @PostMapping("/auth")
-    public ResponseEntity<ApiResponse<UserResponse>> login(@RequestBody UserLoginRequest request) {
-        System.out.println(request.getEmail());
+    public ResponseEntity<BaseResponse<UserResponse>> login(@RequestBody UserLoginRequest request) {
         return ResponseUtil.success(userService.login(request));
     }
 
     @PostMapping("/auth/token")
-    public ResponseEntity<ApiResponse<Void>> logout(@RequestParam Long userId) {
+    public ResponseEntity<BaseResponse<Void>> logout(@RequestParam Long userId) {
         userService.logout(userId);
         return ResponseUtil.success(CustomResponseCode.NO_CONTENT, null);
     }
 
-
     @PatchMapping("/{id}/nickname")
-    public ResponseEntity<ApiResponse<UserResponse>> updateNickname(
-            @PathVariable Long id, @RequestBody UserUpdateRequest request) {
+    public ResponseEntity<BaseResponse<UserResponse>> updateNickname(
+            @PathVariable Long id, @RequestBody UserNicknameUpdateRequest request) {
         return ResponseUtil.success(userService.updateNickname(id, request));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Void>> deleteUser(@PathVariable Long id) {
+    public ResponseEntity<BaseResponse<Void>> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
         return ResponseUtil.success(CustomResponseCode.NO_CONTENT, null);
     }
 
-    @PostMapping("/validate-password")
-    public ResponseEntity<ApiResponse<Boolean>> validatePassword(
-            @RequestParam Long id, @RequestParam String password) {
-        return ResponseUtil.success(userService.validatePassword(id, password));
-    }
-
     @PatchMapping("/{id}/password")
-    public ResponseEntity<ApiResponse<Void>> updatePassword(
-            @PathVariable Long id, @RequestParam String newPassword) {
-        userService.updatePassword(id, newPassword);
+    public ResponseEntity<BaseResponse<Void>> updatePassword(
+            @PathVariable Long id, @RequestBody UserPasswordUpdateRequest request) {
+        userService.updatePassword(id, request);
         return ResponseUtil.success(CustomResponseCode.NO_CONTENT, null);
     }
 

@@ -3,9 +3,10 @@ package com.example.spring_assignment1.service;
 import com.example.spring_assignment1.constant.CustomResponseCode;
 import com.example.spring_assignment1.domain.User;
 import com.example.spring_assignment1.dto.auth.UserLoginRequest;
+import com.example.spring_assignment1.dto.user.UserPasswordUpdateRequest;
 import com.example.spring_assignment1.dto.user.UserResponse;
 import com.example.spring_assignment1.dto.user.UserSignupRequest;
-import com.example.spring_assignment1.dto.user.UserUpdateRequest;
+import com.example.spring_assignment1.dto.user.UserNicknameUpdateRequest;
 import com.example.spring_assignment1.exception.BusinessException;
 import com.example.spring_assignment1.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -37,7 +38,7 @@ public class UserService {
         userRepository.findById(userId).orElseThrow(() -> new BusinessException(CustomResponseCode.USER_NOT_FOUND));
     }
 
-    public UserResponse updateNickname(Long id, UserUpdateRequest req) {
+    public UserResponse updateNickname(Long id, UserNicknameUpdateRequest req) {
         if (userRepository.existsByNickname(req.getNickname()))
             throw new BusinessException(CustomResponseCode.DUPLICATE_NICKNAME);
         User user = userRepository.findById(id).orElseThrow(() -> new BusinessException(CustomResponseCode.USER_NOT_FOUND));
@@ -50,14 +51,12 @@ public class UserService {
         userRepository.delete(id);
     }
 
-    public boolean validatePassword(Long id, String password) {
+    public void updatePassword(Long id, UserPasswordUpdateRequest req) {
         User user = userRepository.findById(id).orElseThrow(() -> new BusinessException(CustomResponseCode.USER_NOT_FOUND));
-        return user.getPassword().equals(password);
-    }
-
-    public void updatePassword(Long id, String newPassword) {
-        User user = userRepository.findById(id).orElseThrow(() -> new BusinessException(CustomResponseCode.USER_NOT_FOUND));
-        user.setPassword(newPassword);
+        if(!user.validatePassword(req.getCurrentPassword())){
+            throw new BusinessException(CustomResponseCode.INVALID_PASSWORD);
+        }
+        user.setPassword(req.getNewPassword());
     }
 
     private UserResponse toResponse(User user) {

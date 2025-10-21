@@ -6,14 +6,15 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
 public class UserRepository {
     private final List<User> users = new ArrayList<>();
-    private Long nextId=1L;
+    AtomicLong nextId = new AtomicLong(1);
 
     public User save(User user){
-        user.setId(nextId++);
+        user.setId(nextId.getAndIncrement());
         users.add(user); //리스트에 회원정보가 저장이 됩니다.
         return user;
     }
