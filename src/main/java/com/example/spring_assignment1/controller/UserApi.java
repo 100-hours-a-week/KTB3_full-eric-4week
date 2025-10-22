@@ -24,7 +24,7 @@ public interface UserApi {
     @Operation(summary = "로그인", description = "이메일, 비밀번호를 넣고 로그인을 시도합니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200",description = "로그인 성공"),
-            @ApiResponse(responseCode = "400",description = "비밀번호가 올바르지 않습니다."),
+            @ApiResponse(responseCode = "400",description = "올바르지 않은 비밀번호 에러"),
             @ApiResponse(responseCode = "404",description = "존재하지 않는 사용자 에러")
     })
     ResponseEntity<BaseResponse<UserResponse>> login(@RequestBody UserLoginRequest request);

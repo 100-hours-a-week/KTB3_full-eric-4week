@@ -1,7 +1,10 @@
 package com.example.spring_assignment1.domain;
 
+import lombok.Builder;
+
 import java.time.LocalDateTime;
 
+@Builder(toBuilder = true)
 public class Post {
     private Long id;
     private String title;
@@ -38,13 +41,20 @@ public class Post {
     public Long getAuthorId() { return authorId; }
     public String getAuthorNickname() { return authorNickname; }
 
-    public void setId(Long id) { this.id = id; }
-
+    public Post initId(Long id){
+        return this.toBuilder().id(id).build();
+    }
+    public Post updatePost(String title, String content) {
+        return this.toBuilder().title(title).content(content).updatedAt(LocalDateTime.now()).build();
+    }
+    /*
     public void update(String title, String content) {
         this.title = title;
         this.content = content;
         this.updatedAt = LocalDateTime.now();
     }
+
+     */
 
     public void increaseViews() {
         this.views++;

@@ -7,9 +7,7 @@ import com.example.spring_assignment1.domain.User;
 import com.example.spring_assignment1.dto.comment.CommentRequest;
 import com.example.spring_assignment1.dto.comment.CommentResponse;
 import com.example.spring_assignment1.exception.BusinessException;
-import com.example.spring_assignment1.repository.CommentRepository;
-import com.example.spring_assignment1.repository.PostRepository;
-import com.example.spring_assignment1.repository.UserRepository;
+import com.example.spring_assignment1.repository.*;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -34,18 +32,20 @@ public class CommentService {
         return toResponse(commentRepository.save(comment));
     }
 
-    public List<CommentResponse> getComments(Long postId) {
+    public List<CommentResponse> getCommentsByPost(Long postId) {
         postRepository.findById(postId).orElseThrow(() -> new BusinessException(CustomResponseCode.POST_NOT_FOUND));
         return commentRepository.findByPostId(postId).stream().map(this::toResponse).toList();
     }
 
     public CommentResponse updateComment(Long id, CommentRequest req) {
         Comment comment = commentRepository.findByCommentId(id).orElseThrow(() -> new BusinessException(CustomResponseCode.COMMENT_NOT_FOUND));
-        if(!comment.getUserId().equals(req.getUserId())) {
+        if(!comment.isMyCommentByUserId(req.getUserId())) {
             throw new BusinessException(CustomResponseCode.FORBIDDEN_ERROR);
         }
-        comment.update(req.getContent());
-        return toResponse(comment);
+        Comment updatedComment = comment.updateComment(req.getContent());
+        commentRepository.save(updatedComment);
+        //comment.update(req.getContent());
+        return toResponse(updatedComment);
     }
 
     public void deleteComment(Long id) {
@@ -55,6 +55,6 @@ public class CommentService {
 
     private CommentResponse toResponse(Comment comment) {
         User user = userRepository.findById(comment.getUserId()).orElseThrow(() -> new BusinessException(CustomResponseCode.USER_NOT_FOUND));
-        return new CommentResponse(comment.getPostId(), comment.getCommentId(), comment.getContent(), comment.getCreatedAt(), comment.getUpdatedAt(), comment.getUserId(), comment.getCommenterNickname());
+        return new CommentResponse(comment.getPostId(), comment.getId(), comment.getContent(), comment.getCreatedAt(), comment.getUpdatedAt(), comment.getUserId(), comment.getCommenterNickname());
     }
 }

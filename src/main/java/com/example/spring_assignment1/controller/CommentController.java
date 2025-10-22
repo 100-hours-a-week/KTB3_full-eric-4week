@@ -13,13 +13,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/comments")
-public class CommentController {
+public class CommentController implements CommentApi{
     private final CommentService commentService;
     public CommentController(CommentService commentService) { this.commentService = commentService; }
 
     @GetMapping("/post")
     public ResponseEntity<BaseResponse<List<CommentResponse>>> getCommentsByPost(@RequestParam Long postId) {
-        return ResponseUtil.success(commentService.getComments(postId));
+        return ResponseUtil.success(commentService.getCommentsByPost(postId));
     }
 
     @PostMapping

@@ -33,5 +33,6 @@ public enum CustomResponseCode {
 
     public HttpStatus getStatus() { return status; }
     public String getMessage() { return message; }
-    public String getCode() { return this.name(); }
+    //public CustomResponseCode getCode() { return CustomResponseCode.valueOf(this.name()) ; }
+
 }

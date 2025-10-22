@@ -8,6 +8,7 @@ import com.example.spring_assignment1.dto.user.UserResponse;
 import com.example.spring_assignment1.dto.user.UserSignupRequest;
 import com.example.spring_assignment1.dto.user.UserNicknameUpdateRequest;
 import com.example.spring_assignment1.exception.BusinessException;
+
 import com.example.spring_assignment1.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -42,8 +43,10 @@ public class UserService {
         if (userRepository.existsByNickname(req.getNickname()))
             throw new BusinessException(CustomResponseCode.DUPLICATE_NICKNAME);
         User user = userRepository.findById(id).orElseThrow(() -> new BusinessException(CustomResponseCode.USER_NOT_FOUND));
-        user.setNickname(req.getNickname());
-        return toResponse(user);
+        User updatedNickname = user.updateNickname(req.getNickname());
+        userRepository.save(updatedNickname);
+        //user.setNickname(req.getNickname());
+        return toResponse(updatedNickname);
     }
 
     public void deleteUser(Long id) {
@@ -56,7 +59,11 @@ public class UserService {
         if(!user.validatePassword(req.getCurrentPassword())){
             throw new BusinessException(CustomResponseCode.INVALID_PASSWORD);
         }
-        user.setPassword(req.getNewPassword());
+        //getNewPassword를 updatePassword에 넘겨서 바뀐 비밀번호를 가진 새로운 객체를 만들고,
+        //그 객체가 updatePWD인데,userRepository에 save로 넘겨서 users.put으로 저장한다.
+        User updatedPassword = user.updatePassword(req.getNewPassword());
+        userRepository.save(updatedPassword);
+        //user.setPassword(req.getNewPassword());
     }
 
     private UserResponse toResponse(User user) {

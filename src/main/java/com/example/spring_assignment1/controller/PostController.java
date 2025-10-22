@@ -14,12 +14,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/posts")
-public class PostController {
+public class PostController implements PostApi {
     private final PostService postService;
     public PostController(PostService postService) { this.postService = postService; }
 
     @GetMapping
-    public ResponseEntity<BaseResponse<List<GetPostsResponse>>> getPosts() {
+    public ResponseEntity<BaseResponse<List<GetPostsResponse>>> getAllPosts() {
         return ResponseUtil.success(postService.getAllPosts());
     }
 

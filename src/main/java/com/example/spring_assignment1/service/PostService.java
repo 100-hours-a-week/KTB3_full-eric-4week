@@ -49,8 +49,10 @@ public class PostService {
         if(!post.getAuthorId().equals(req.getUserId())){
             throw new BusinessException(CustomResponseCode.FORBIDDEN_ERROR);
         }
-        post.update(req.getTitle(), req.getContent());
-        return toResponse(post);
+        Post updatedPost = post.updatePost(req.getTitle(), req.getContent());
+        postRepository.save(updatedPost);
+        //post.update(req.getTitle(), req.getContent());
+        return toResponse(updatedPost);
     }
 
     public void deletePost(Long id) {
@@ -60,6 +62,6 @@ public class PostService {
 
     private PostResponse toResponse(Post post) {
         User author = userRepository.findById(post.getAuthorId()).orElseThrow(() -> new BusinessException(CustomResponseCode.USER_NOT_FOUND));
-        return new PostResponse(post.getId(), post.getTitle(), post.getContent(), post.getLikes(), post.getComments(), post.getViews(), post.getCreatedAt(), post.getUpdatedAt(), author.getId(), author.getNickname());
+        return new PostResponse(post.getId(), post.getTitle(), post.getContent(), post.getLikes(), post.getComments(), post.getViews(), post.getCreatedAt(), post.getUpdatedAt(), post.getAuthorId(), author.getNickname());
     }
 }
