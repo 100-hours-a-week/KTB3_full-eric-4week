@@ -28,7 +28,6 @@ public class BaseResponse<T> {
     }
 
     public static <T> BaseResponse<T> success(T data) {
-        //return new BaseResponse<>(true, "SUCCESS", "요청이 성공적으로 처리되었습니다.", data);
         return success(CustomResponseCode.SUCCESS, data);
     } //특정 Success 제외 대부분의 성공 처리 Response
 

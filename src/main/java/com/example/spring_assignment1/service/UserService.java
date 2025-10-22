@@ -45,7 +45,6 @@ public class UserService {
         User user = userRepository.findById(id).orElseThrow(() -> new BusinessException(CustomResponseCode.USER_NOT_FOUND));
         User updatedNickname = user.updateNickname(req.getNickname());
         userRepository.save(updatedNickname);
-        //user.setNickname(req.getNickname());
         return toResponse(updatedNickname);
     }
 
@@ -63,7 +62,6 @@ public class UserService {
         //그 객체가 updatePWD인데,userRepository에 save로 넘겨서 users.put으로 저장한다.
         User updatedPassword = user.updatePassword(req.getNewPassword());
         userRepository.save(updatedPassword);
-        //user.setPassword(req.getNewPassword());
     }
 
     private UserResponse toResponse(User user) {

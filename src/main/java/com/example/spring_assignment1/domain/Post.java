@@ -47,14 +47,6 @@ public class Post {
     public Post updatePost(String title, String content) {
         return this.toBuilder().title(title).content(content).updatedAt(LocalDateTime.now()).build();
     }
-    /*
-    public void update(String title, String content) {
-        this.title = title;
-        this.content = content;
-        this.updatedAt = LocalDateTime.now();
-    }
-
-     */
 
     public void increaseViews() {
         this.views++;

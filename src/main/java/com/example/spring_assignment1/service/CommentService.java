@@ -44,7 +44,6 @@ public class CommentService {
         }
         Comment updatedComment = comment.updateComment(req.getContent());
         commentRepository.save(updatedComment);
-        //comment.update(req.getContent());
         return toResponse(updatedComment);
     }
 

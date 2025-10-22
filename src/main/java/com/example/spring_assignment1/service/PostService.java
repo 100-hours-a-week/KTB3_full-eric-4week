@@ -51,7 +51,6 @@ public class PostService {
         }
         Post updatedPost = post.updatePost(req.getTitle(), req.getContent());
         postRepository.save(updatedPost);
-        //post.update(req.getTitle(), req.getContent());
         return toResponse(updatedPost);
     }
 

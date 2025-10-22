@@ -42,12 +42,4 @@ public class Comment {
     public boolean isMyCommentByUserId(Long currentUserId) {
         return userId.equals(currentUserId);
     }
-    /*
-    public void update(String content) {
-        this.content = content;
-        this.createdAt = LocalDateTime.now();
-    }
-
-     */
-
 }

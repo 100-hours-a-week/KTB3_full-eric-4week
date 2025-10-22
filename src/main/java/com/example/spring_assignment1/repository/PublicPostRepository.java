@@ -8,17 +8,6 @@ import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
 public class PublicPostRepository implements PostRepository {
-    /*
-    private final List<Post> posts = new ArrayList<>();
-    AtomicLong nextId = new AtomicLong(1);
-
-    public Post save(Post post){
-        post.setId(nextId.getAndIncrement());
-        posts.add(post); //리스트에 회원정보가 저장이 됩니다.
-        return post;
-    }
-
-     */
     private final Map<Long, Post> posts = new HashMap<>();
     AtomicLong nextId = new AtomicLong(1);
 
@@ -36,11 +25,9 @@ public class PublicPostRepository implements PostRepository {
 
     public Optional<Post> findById(Long id) {
         return Optional.ofNullable(posts.get(id));
-        //return posts.stream().filter(post -> post.getId().equals(id)).findFirst();
     }
 
     public void delete(Long id) {
         posts.remove(id);
-        //posts.removeIf(post -> post.getId().equals(id));
     }
 }
